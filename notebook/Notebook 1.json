@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "771cfb14-61e5-4cdf-8ef3-627f4a2d41d9"
+				"spark.autotune.trackingId": "4e1d6a65-6e2d-47bc-85e2-5f55154dc477"
 			}
 		},
 		"metadata": {
@@ -127,9 +127,47 @@
 					}
 				},
 				"source": [
-					""
+					"df.printSchema()"
 				],
-				"execution_count": null
+				"execution_count": 10
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Dataframe creation from restApi calls"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"import requests\n",
+					"\n",
+					"resp = requests.get(\"https://api.openf1.org/v1/sessions\")\n",
+					"df1 = spark.sparkContext.parallelize([resp.text])\n",
+					"\n",
+					"df2 = spark.read.json(df1)\n",
+					"\n",
+					"df2.show()"
+				],
+				"execution_count": 12
 			},
 			{
 				"cell_type": "code",
