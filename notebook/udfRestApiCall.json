@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "43315832-3973-4a16-b713-6f389e14081e"
+				"spark.autotune.trackingId": "02e942cc-270b-4f6e-97e0-a3ade98ee435"
 			}
 		},
 		"metadata": {
@@ -49,7 +49,46 @@
 			{
 				"cell_type": "code",
 				"source": [
-					""
+					"import requests\n",
+					"import json\n",
+					"from pyspark.sql.functions import udf, col, explode\n",
+					"from pyspark.sql.types import StructType, StructField, IntegerType, StringType, ArrayType\n",
+					"from pyspark.sql import Row"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"def executeRestApi(verb, url, body, page):\n",
+					"  #\n",
+					"  headers = {\n",
+					"      'Content-Type': \"application/json\",\n",
+					"      'User-Agent': \"apache spark 3.x\"\n",
+					"  }\n",
+					"  res = None\n",
+					"  # Make API request, get response object back, create dataframe from above schema.\n",
+					"  try:\n",
+					"    if verb == \"get\":\n",
+					"      res = requests.get(\"{url}/{page}\".format(url=url,page=page), data=body, headers=headers)\n",
+					"    else:\n",
+					"      res = requests.post(\"{url}/{page}\".format(url=url,page=page), data=body, headers=headers)\n",
+					"  except Exception as e:\n",
+					"    return e\n",
+					"  if res != None and res.status_code == 200:\n",
+					"    return json.loads(res.text)\n",
+					"  return None"
 				],
 				"execution_count": null
 			}
